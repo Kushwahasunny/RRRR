@@ -1,0 +1,85 @@
+import { useForm } from "react-hook-form"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+
+type FormData = {
+  name: string
+  email: string
+  message: string
+}
+
+export default function UserForm() {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    trigger,
+  } = useForm<FormData>({
+    mode: "onChange", // enables live validation
+  })
+
+  const onSubmit = (data: FormData) => {
+    console.log("Form submitted:", data)
+    reset()
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full max-w-2xl mx-auto p-6 space-y-6 bg-white rounded-lg shadow-md"
+    >
+      {/* Name */}
+      <div className="space-y-2">
+        <Label htmlFor="name">Name</Label>
+        <Input
+          id="name"
+          placeholder="Your name"
+          className={errors.name ? "border-red-500 focus-visible:ring-red-500" : ""}
+          {...register("name", {
+            required: "Name is required",
+            onChange: () => trigger("name"),
+          })}
+        />
+        {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+      </div>
+
+      {/* Email */}
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          placeholder="you@example.com"
+          className={errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}
+          {...register("email", {
+            required: "Email is required",
+            onChange: () => trigger("email"),
+          })}
+        />
+        {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+      </div>
+
+      {/* Message */}
+      <div className="space-y-2">
+        <Label htmlFor="message">Message</Label>
+        <Textarea
+          id="message"
+          placeholder="Your message here..."
+          className={errors.message ? "border-red-500 focus-visible:ring-red-500" : ""}
+          {...register("message", {
+            required: "Message is required",
+            onChange: () => trigger("message"),
+          })}
+        />
+        {errors.message && <p className="text-sm text-red-500">{errors.message.message}</p>}
+      </div>
+
+      <Button type="submit" className="w-full sm:w-auto">
+        Submit
+      </Button>
+    </form>
+  )
+}
