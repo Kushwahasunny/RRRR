@@ -1,0 +1,65 @@
+// components/UserForm.tsx
+import { useForm } from "react-hook-form"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+
+type FormData = {
+  name: string
+  email: string
+  message: string
+}
+
+export default function UserForm() {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>()
+
+  const onSubmit = (data: FormData) => {
+    console.log("Form submitted:", data)
+    reset()
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-2xl mx-auto p-6 space-y-6 bg-white rounded-lg shadow-md">
+      <div className="space-y-2">
+        <Label htmlFor="name">Name</Label>
+        <Input
+          id="name"
+          placeholder="Your name"
+          {...register("name", { required: "Name is required" })}
+        />
+        {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          placeholder="you@example.com"
+          {...register("email", { required: "Email is required" })}
+        />
+        {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="message">Message</Label>
+        <Textarea
+          id="message"
+          placeholder="Your message here..."
+          {...register("message", { required: "Message is required" })}
+        />
+        {errors.message && <p className="text-sm text-red-500">{errors.message.message}</p>}
+      </div>
+
+      <Button type="submit" className="w-full sm:w-auto">
+        Submit
+      </Button>
+    </form>
+  )
+}
